@@ -54,41 +54,70 @@ type TransferTxResult struct {
 // * it creates a transfer record, add account entries, update accounts balance within a single database transation
 func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
-
-	err := store.execTx(ctx, func(queries *Queries) error {
+	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
-		result.Transfer, err = queries.CreateTransfer(ctx, CreateTransferParams{
+		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: arg.FromAccountId,
 			ToAccountID:   arg.ToAccountId,
 			Amount:        arg.Amount,
 		})
-
 		if err != nil {
 			return err
 		}
-
-		result.FromEntry, err = queries.CreateEntry(ctx, CreateEntryParams{
+		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.FromAccountId,
 			Amount:    -arg.Amount,
 		})
-
 		if err != nil {
 			return err
 		}
-
-		result.ToEntry, err = queries.CreateEntry(ctx, CreateEntryParams{
+		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.ToAccountId,
 			Amount:    arg.Amount,
 		})
-
 		if err != nil {
 			return err
 		}
 
-		// todo update accounts balance
-
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.FromAccountId,
+			Amount: -arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.ToAccountId,
+			Amount: arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
 		return nil
 	})
-
 	return result, err
+}
+
+func addMoney(
+	ctx context.Context,
+	queries *Queries,
+	account1ID int64,
+	amount1 int64,
+	account2ID int64,
+	amount2 int64,
+) (account1 Account, account2 Account, err error) {
+	account1, err = queries.AddAccountBalance(ctx, AddAccountBalanceParams{
+		Amount: account1ID,
+		ID:     amount1,
+	})
+	if err != nil {
+		return
+	}
+
+	account2, err = queries.AddAccountBalance(ctx, AddAccountBalanceParams{
+		Amount: account2ID,
+		ID:     amount2,
+	})
+	return
+
 }
