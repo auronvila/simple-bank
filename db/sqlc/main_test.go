@@ -2,23 +2,25 @@ package simplebank
 
 import (
 	"database/sql"
+	"github.com/auronvila/simple-bank/util"
 	_ "github.com/lib/pq"
 	"log"
 	"testing"
-)
-
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://postgres:1@localhost:5432/simple-bank?sslmode=disable"
 )
 
 var testQueries *Queries
 var testDb *sql.DB
 
 func TestMain(m *testing.M) {
+	var config util.Config
 	var err error
 
-	testDb, err = sql.Open(dbDriver, dbSource)
+	config, err = util.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("cannot load config on test main")
+	}
+
+	testDb, err = sql.Open(config.DBDriver, config.DbSource)
 	if err != nil {
 		log.Fatal("cannot connect to the db", err)
 	}
