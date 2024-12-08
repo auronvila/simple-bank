@@ -7,8 +7,11 @@ migratedown:
 sqlc:
 	sqlc generate
 
-test:
+testDb:
 	go test -v -cover ./...
+
+testApi:
+	go test -v -cover ./api/...
 
 server:
 	go run main.go
