@@ -14,8 +14,60 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
+
+func TestListAccounts(t *testing.T) {
+	testCases := []struct {
+		name          string
+		params        gin.H
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			params: gin.H{
+				"page_id":   "1",
+				"page_size": "5",
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().ListAccounts(gomock.Any(), gomock.Any()).Times(1).Return([]simplebank.Account{}, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockStore := mockdb.NewMockStore(ctrl)
+			testCase.buildStubs(mockStore)
+
+			server := NewServer(mockStore)
+			recorder := httptest.NewRecorder()
+
+			// Construct the query parameters
+			queryParams := "?"
+			for key, value := range testCase.params {
+				queryParams += fmt.Sprintf("%s=%s&", key, value)
+			}
+			queryParams = strings.TrimSuffix(queryParams, "&")
+
+			url := fmt.Sprintf("/accounts%s", queryParams)
+
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, request)
+			testCase.checkResponse(t, recorder)
+		})
+	}
+}
 
 func TestCreateAccountApi(t *testing.T) {
 	testCases := []struct {
