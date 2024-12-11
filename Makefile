@@ -22,6 +22,9 @@ testApi:
 server:
 	go run main.go
 
+createmigrate:
+	migrate create -ext sql -dir db/migration -seq <<MIGRATION NAME>>
+
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/auronvila/simple-bank/db/sqlc Store
 
