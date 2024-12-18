@@ -46,6 +46,10 @@ jobs:
 
       - name: Run migrations
         run: make migrateup
+        
+      - name: Generate mock functions
+        run: make mock
+        
 
       - name: Run DB tests
         run: make testDb
