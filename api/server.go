@@ -27,8 +27,8 @@ func NewServer(store simplebank.Store) *Server {
 		server.GetAccountById,
 		server.ListAccounts,
 	)
-
 	routes.TransferRoutes(router, server.CreateTransfer)
+	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername)
 
 	server.router = router
 	return server
