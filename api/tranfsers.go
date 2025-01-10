@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	simplebank "github.com/auronvila/simple-bank/db/sqlc"
+	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -32,7 +32,7 @@ func (server *Server) CreateTransfer(ctx *gin.Context) {
 		return
 	}
 
-	arg := simplebank.TransferTxParams{
+	arg := db.TransferTxParams{
 		FromAccountId: reqData.FromAccountId,
 		ToAccountId:   reqData.ToAccountId,
 		Amount:        reqData.Amount,

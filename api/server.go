@@ -3,7 +3,7 @@ package api
 import (
 	"fmt"
 	"github.com/auronvila/simple-bank/api/routes"
-	simplebank "github.com/auronvila/simple-bank/db/sqlc"
+	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/token"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/gin-gonic/gin"
@@ -13,12 +13,12 @@ import (
 
 type Server struct {
 	config     util.Config
-	store      simplebank.Store
+	store      db.Store
 	tokenMaker token.Maker
 	router     *gin.Engine
 }
 
-func NewServer(config util.Config, store simplebank.Store) (*Server, error) {
+func NewServer(config util.Config, store db.Store) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
@@ -41,7 +41,7 @@ func NewServer(config util.Config, store simplebank.Store) (*Server, error) {
 		server.ListAccounts,
 	)
 	routes.TransferRoutes(router, server.CreateTransfer)
-	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername)
+	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername, server.loginUser)
 
 	server.router = router
 	return server, nil

@@ -3,7 +3,7 @@ package api
 import (
 	"database/sql"
 	"errors"
-	simplebank "github.com/auronvila/simple-bank/db/sqlc"
+	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"net/http"
@@ -21,7 +21,7 @@ func (server *Server) CreateAccount(ctx *gin.Context) {
 		return
 	}
 
-	arg := simplebank.CreateAccountParams{
+	arg := db.CreateAccountParams{
 		Owner:    reqData.Owner,
 		Balance:  0,
 		Currency: reqData.Currency,
@@ -79,7 +79,7 @@ func (server Server) ListAccounts(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-	arg := simplebank.ListAccountsParams{
+	arg := db.ListAccountsParams{
 		Limit:  listAccountReq.PageSize,
 		Offset: (listAccountReq.PageId - 1) * listAccountReq.PageSize,
 	}

@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/auronvila/simple-bank/api"
-	simplebank "github.com/auronvila/simple-bank/db/sqlc"
+	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/util"
 	_ "github.com/lib/pq"
 	"log"
@@ -19,7 +19,7 @@ func main() {
 		log.Fatal("cannot connect to the db", err)
 	}
 
-	store := simplebank.NewStore(conn)
+	store := db.NewStore(conn)
 	server, err := api.NewServer(config, store)
 	if err != nil {
 		log.Fatal("error creating the server", err)

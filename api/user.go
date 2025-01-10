@@ -2,7 +2,8 @@ package api
 
 import (
 	"database/sql"
-	simplebank "github.com/auronvila/simple-bank/db/sqlc"
+	"errors"
+	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
@@ -37,7 +38,7 @@ func (server *Server) CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	arg := simplebank.CreateUserParams{
+	arg := db.CreateUserParams{
 		Username:       reqData.Username,
 		Email:          reqData.Email,
 		FullName:       reqData.FullName,
@@ -98,4 +99,57 @@ func (server Server) GetUserByUsername(ctx *gin.Context) {
 		CreatedAt:         user.CreatedAt,
 	}
 	ctx.JSON(http.StatusOK, structuredUserRes)
+}
+
+type loginUserRequest struct {
+	Username string `json:"username" binding:"required,alphanum"`
+	Password string `json:"password" binding:"required,min=6"`
+}
+
+type loginUserResponse struct {
+	AccessToken string             `json:"access_token"`
+	User        createUserResponse `json:"user"`
+}
+
+func (server *Server) loginUser(ctx *gin.Context) {
+	var req loginUserRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
+
+	user, err := server.store.GetUser(ctx, req.Username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	err = util.CheckPassword(req.Password, user.HashedPassword)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
+	accessToken, err := server.tokenMaker.GenerateToken(user.Username, server.config.AccessTokenDuration)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	userRes := createUserResponse{
+		Username:          user.Username,
+		FullName:          user.FullName,
+		Email:             user.Email,
+		PasswordChangedAt: user.PasswordChangedAt,
+		CreatedAt:         user.CreatedAt,
+	}
+
+	rsp := loginUserResponse{
+		AccessToken: accessToken,
+		User:        userRes,
+	}
+
+	ctx.JSON(http.StatusOK, rsp)
 }
