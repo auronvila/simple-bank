@@ -34,14 +34,17 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		v.RegisterValidation("currency", validCurrency)
 	}
 
+	authRouter := router.Group("/").Use(authMiddleware(server.tokenMaker))
+
+	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername, server.loginUser)
 	routes.AccountRoutes(
 		router,
+		authRouter,
 		server.CreateAccount,
 		server.GetAccountById,
 		server.ListAccounts,
 	)
-	routes.TransferRoutes(router, server.CreateTransfer)
-	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername, server.loginUser)
+	routes.TransferRoutes(router, authRouter, server.CreateTransfer)
 
 	server.router = router
 	return server, nil

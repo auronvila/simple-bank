@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	simplebank "github.com/auronvila/simple-bank/db/sqlc"
+	db "github.com/auronvila/simple-bank/db/sqlc"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -42,10 +42,10 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // AddAccountBalance mocks base method.
-func (m *MockStore) AddAccountBalance(ctx context.Context, arg simplebank.AddAccountBalanceParams) (simplebank.Account, error) {
+func (m *MockStore) AddAccountBalance(ctx context.Context, arg db.AddAccountBalanceParams) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddAccountBalance", ctx, arg)
-	ret0, _ := ret[0].(simplebank.Account)
+	ret0, _ := ret[0].(db.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,10 +57,10 @@ func (mr *MockStoreMockRecorder) AddAccountBalance(ctx, arg any) *gomock.Call {
 }
 
 // CreateAccount mocks base method.
-func (m *MockStore) CreateAccount(ctx context.Context, arg simplebank.CreateAccountParams) (simplebank.Account, error) {
+func (m *MockStore) CreateAccount(ctx context.Context, arg db.CreateAccountParams) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccount", ctx, arg)
-	ret0, _ := ret[0].(simplebank.Account)
+	ret0, _ := ret[0].(db.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -72,10 +72,10 @@ func (mr *MockStoreMockRecorder) CreateAccount(ctx, arg any) *gomock.Call {
 }
 
 // CreateEntry mocks base method.
-func (m *MockStore) CreateEntry(ctx context.Context, arg simplebank.CreateEntryParams) (simplebank.Entry, error) {
+func (m *MockStore) CreateEntry(ctx context.Context, arg db.CreateEntryParams) (db.Entry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateEntry", ctx, arg)
-	ret0, _ := ret[0].(simplebank.Entry)
+	ret0, _ := ret[0].(db.Entry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -87,10 +87,10 @@ func (mr *MockStoreMockRecorder) CreateEntry(ctx, arg any) *gomock.Call {
 }
 
 // CreateTransfer mocks base method.
-func (m *MockStore) CreateTransfer(ctx context.Context, arg simplebank.CreateTransferParams) (simplebank.Transfer, error) {
+func (m *MockStore) CreateTransfer(ctx context.Context, arg db.CreateTransferParams) (db.Transfer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTransfer", ctx, arg)
-	ret0, _ := ret[0].(simplebank.Transfer)
+	ret0, _ := ret[0].(db.Transfer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -102,10 +102,10 @@ func (mr *MockStoreMockRecorder) CreateTransfer(ctx, arg any) *gomock.Call {
 }
 
 // CreateUser mocks base method.
-func (m *MockStore) CreateUser(ctx context.Context, arg simplebank.CreateUserParams) (simplebank.User, error) {
+func (m *MockStore) CreateUser(ctx context.Context, arg db.CreateUserParams) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", ctx, arg)
-	ret0, _ := ret[0].(simplebank.User)
+	ret0, _ := ret[0].(db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -131,10 +131,10 @@ func (mr *MockStoreMockRecorder) DeleteAccount(ctx, id any) *gomock.Call {
 }
 
 // GetAccount mocks base method.
-func (m *MockStore) GetAccount(ctx context.Context, id int64) (simplebank.Account, error) {
+func (m *MockStore) GetAccount(ctx context.Context, id int64) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccount", ctx, id)
-	ret0, _ := ret[0].(simplebank.Account)
+	ret0, _ := ret[0].(db.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -146,10 +146,10 @@ func (mr *MockStoreMockRecorder) GetAccount(ctx, id any) *gomock.Call {
 }
 
 // GetAccountForUpdate mocks base method.
-func (m *MockStore) GetAccountForUpdate(ctx context.Context, id int64) (simplebank.Account, error) {
+func (m *MockStore) GetAccountForUpdate(ctx context.Context, id int64) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccountForUpdate", ctx, id)
-	ret0, _ := ret[0].(simplebank.Account)
+	ret0, _ := ret[0].(db.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -161,10 +161,10 @@ func (mr *MockStoreMockRecorder) GetAccountForUpdate(ctx, id any) *gomock.Call {
 }
 
 // GetEntry mocks base method.
-func (m *MockStore) GetEntry(ctx context.Context, id int64) (simplebank.Entry, error) {
+func (m *MockStore) GetEntry(ctx context.Context, id int64) (db.Entry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetEntry", ctx, id)
-	ret0, _ := ret[0].(simplebank.Entry)
+	ret0, _ := ret[0].(db.Entry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -176,10 +176,10 @@ func (mr *MockStoreMockRecorder) GetEntry(ctx, id any) *gomock.Call {
 }
 
 // GetTransfer mocks base method.
-func (m *MockStore) GetTransfer(ctx context.Context, id int64) (simplebank.Transfer, error) {
+func (m *MockStore) GetTransfer(ctx context.Context, id int64) (db.Transfer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTransfer", ctx, id)
-	ret0, _ := ret[0].(simplebank.Transfer)
+	ret0, _ := ret[0].(db.Transfer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -191,10 +191,10 @@ func (mr *MockStoreMockRecorder) GetTransfer(ctx, id any) *gomock.Call {
 }
 
 // GetUser mocks base method.
-func (m *MockStore) GetUser(ctx context.Context, username string) (simplebank.User, error) {
+func (m *MockStore) GetUser(ctx context.Context, username string) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", ctx, username)
-	ret0, _ := ret[0].(simplebank.User)
+	ret0, _ := ret[0].(db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -206,10 +206,10 @@ func (mr *MockStoreMockRecorder) GetUser(ctx, username any) *gomock.Call {
 }
 
 // ListAccounts mocks base method.
-func (m *MockStore) ListAccounts(ctx context.Context, arg simplebank.ListAccountsParams) ([]simplebank.Account, error) {
+func (m *MockStore) ListAccounts(ctx context.Context, arg db.ListAccountsParams) ([]db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAccounts", ctx, arg)
-	ret0, _ := ret[0].([]simplebank.Account)
+	ret0, _ := ret[0].([]db.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -221,10 +221,10 @@ func (mr *MockStoreMockRecorder) ListAccounts(ctx, arg any) *gomock.Call {
 }
 
 // ListEntries mocks base method.
-func (m *MockStore) ListEntries(ctx context.Context, arg simplebank.ListEntriesParams) ([]simplebank.Entry, error) {
+func (m *MockStore) ListEntries(ctx context.Context, arg db.ListEntriesParams) ([]db.Entry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListEntries", ctx, arg)
-	ret0, _ := ret[0].([]simplebank.Entry)
+	ret0, _ := ret[0].([]db.Entry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -236,10 +236,10 @@ func (mr *MockStoreMockRecorder) ListEntries(ctx, arg any) *gomock.Call {
 }
 
 // ListTransfers mocks base method.
-func (m *MockStore) ListTransfers(ctx context.Context, arg simplebank.ListTransfersParams) ([]simplebank.Transfer, error) {
+func (m *MockStore) ListTransfers(ctx context.Context, arg db.ListTransfersParams) ([]db.Transfer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListTransfers", ctx, arg)
-	ret0, _ := ret[0].([]simplebank.Transfer)
+	ret0, _ := ret[0].([]db.Transfer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -251,10 +251,10 @@ func (mr *MockStoreMockRecorder) ListTransfers(ctx, arg any) *gomock.Call {
 }
 
 // TransferTx mocks base method.
-func (m *MockStore) TransferTx(ctx context.Context, arg simplebank.TransferTxParams) (simplebank.TransferTxResult, error) {
+func (m *MockStore) TransferTx(ctx context.Context, arg db.TransferTxParams) (db.TransferTxResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TransferTx", ctx, arg)
-	ret0, _ := ret[0].(simplebank.TransferTxResult)
+	ret0, _ := ret[0].(db.TransferTxResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -266,10 +266,10 @@ func (mr *MockStoreMockRecorder) TransferTx(ctx, arg any) *gomock.Call {
 }
 
 // UpdateAccount mocks base method.
-func (m *MockStore) UpdateAccount(ctx context.Context, arg simplebank.UpdateAccountParams) (simplebank.Account, error) {
+func (m *MockStore) UpdateAccount(ctx context.Context, arg db.UpdateAccountParams) (db.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAccount", ctx, arg)
-	ret0, _ := ret[0].(simplebank.Account)
+	ret0, _ := ret[0].(db.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
