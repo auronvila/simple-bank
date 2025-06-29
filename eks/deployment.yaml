@@ -25,11 +25,20 @@ spec:
             - name: DB_DRIVER
               value: "postgres"
             - name: DB_SOURCE
-              value: "postgresql://postgres:1@host.docker.internal:5432/simple-bank?sslmode=disable"
+              value: "postgresql://postgres:1@host.docker.internal:5432/simple-bank?sslmode=disable" # host.docker.internal is used to access the local docker postgres container (because the postgres is not in the kubernetes network)
             - name: ADDRESS
               value: "0.0.0.0:3002"
             - name: TOKEN_SYMMETRIC_KEY
               value: "12334565434567898765432345675432"
             - name: ACCESS_TOKEN_DURATION
               value: "15m"
-              
+
+
+
+            # DOCS            
+            # build the simple bank api docker image
+            # docker build --tag simple-bank:1.0.6 .          can be any versioning number in this case is 6 
+            # load the image that has been previously build
+            # kind load docker-image simple-bank:1.0.6        can be any versioning number in this case is 6
+            # run the deployment yaml file                    
+            # kubectl apply -f ./eks/deployment.yaml
