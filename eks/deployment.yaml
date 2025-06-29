@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-bank-api-deployment
+  labels:
+    app: simple-bank-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-bank-api
+  template:
+    metadata:
+      labels:
+        app: simple-bank-api
+    spec:
+      containers:
+
+        - name: simple-bank-api
+          image: simple-bank:1.0.6
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DB_DRIVER
+              value: "postgres"
+            - name: DB_SOURCE
+              value: "postgresql://postgres:1@host.docker.internal:5432/simple-bank?sslmode=disable"
+            - name: ADDRESS
+              value: "0.0.0.0:3002"
+            - name: TOKEN_SYMMETRIC_KEY
+              value: "12334565434567898765432345675432"
+            - name: ACCESS_TOKEN_DURATION
+              value: "15m"
+              

@@ -14,7 +14,7 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/migrate.linux-amd64 ./migrate
 COPY start.sh .
 COPY wait-for.sh .
-COPY app.env .
+#COPY app.env .
 COPY db/migration ./migration
 
 EXPOSE 3002
