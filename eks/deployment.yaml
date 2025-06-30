@@ -32,6 +32,8 @@ spec:
               value: "12334565434567898765432345675432"
             - name: ACCESS_TOKEN_DURATION
               value: "15m"
+            - name: REFRESH_TOKEN_DURATION
+              value: "24h"
 
 
 

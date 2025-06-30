@@ -36,7 +36,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 	authRouter := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
-	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername, server.loginUser)
+	routes.UserRoutes(router, server.CreateUser, server.GetUserByUsername, server.loginUser, server.renewAccessToken)
 	routes.AccountRoutes(
 		router,
 		authRouter,
