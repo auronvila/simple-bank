@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-bank-api-service
+  labels:
+    run: simple-bank-api-service
+spec:
+  selector:
+    app: simple-bank-api
+  ports:
+    - port: 3002
+      protocol: TCP
+      targetPort: 3002
+  type: LoadBalancer
+  
+  
+  # DOC -> run this command to port the traffic to the service deployed in kubernetes.
+  # kubectl port-forward service/simple-bank-api-service 3002:3002
