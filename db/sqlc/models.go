@@ -5,6 +5,7 @@
 package db
 
 import (
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -53,4 +54,9 @@ type User struct {
 	Email             string    `json:"email"`
 	PasswordChangedAt time.Time `json:"password_changed_at"`
 	CreatedAt         time.Time `json:"created_at"`
+}
+
+func (u User) ProtoReflect() protoreflect.Message {
+	//TODO implement me
+	panic("implement me")
 }

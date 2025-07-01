@@ -26,8 +26,10 @@ spec:
               value: "postgres"
             - name: DB_SOURCE
               value: "postgresql://postgres:1@host.docker.internal:5432/simple-bank?sslmode=disable" # host.docker.internal is used to access the local docker postgres container (because the postgres is not in the kubernetes network)
-            - name: ADDRESS
+            - name: HTTP_SERVER_ADDRESS
               value: "0.0.0.0:3002"
+            - name: GRPC_SERVER_ADDRESS
+              value: "0.0.0.0:3003"
             - name: TOKEN_SYMMETRIC_KEY
               value: "12334565434567898765432345675432"
             - name: ACCESS_TOKEN_DURATION

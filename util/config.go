@@ -10,7 +10,8 @@ import (
 type Config struct {
 	DbDriver             string        `mapstructure:"db_driver"`
 	DbSource             string        `mapstructure:"db_source"`
-	ServerAddress        string        `mapstructure:"address"`
+	HttpServerAddress    string        `mapstructure:"http_server_address"`
+	GrpcServerAddress    string        `mapstructure:"grpc_server_address"`
 	TokenSymmetricKey    string        `mapstructure:"token_symmetric_key"`
 	AccessTokenDuration  string        `mapstructure:"access_token_duration"`
 	RefreshTokenDuration time.Duration `mapstructure:"refresh_token_duration"`
@@ -31,7 +32,8 @@ func LoadConfig(path string) (config Config, err error) {
 	// Bind explicitly
 	_ = viper.BindEnv("db_driver")
 	_ = viper.BindEnv("db_source")
-	_ = viper.BindEnv("address")
+	_ = viper.BindEnv("http_server_address")
+	_ = viper.BindEnv("grpc_server_address")
 	_ = viper.BindEnv("token_symmetric_key")
 	_ = viper.BindEnv("access_token_duration")
 	_ = viper.BindEnv("refresh_token_duration")
