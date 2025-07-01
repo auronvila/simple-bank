@@ -17,10 +17,6 @@ import (
 
 func (server *Server) LoginUser(context context.Context, req *pb.LoginUserRequest) (*pb.LoginUserResponse, error) {
 	user, err := server.store.GetUser(context, req.GetUsername())
-	md, ok := metadata.FromIncomingContext(context)
-	if !ok {
-		return nil, status.Errorf(codes.Internal, "cannot get metadata from context")
-	}
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, status.Errorf(codes.NotFound, "user could not be found")
@@ -28,9 +24,14 @@ func (server *Server) LoginUser(context context.Context, req *pb.LoginUserReques
 		return nil, status.Errorf(codes.Internal, "internal server err!!")
 	}
 
+	md, ok := metadata.FromIncomingContext(context)
+	if !ok {
+		return nil, status.Errorf(codes.Internal, "cannot get metadata from context")
+	}
+
 	err = util.CheckPassword(req.GetPassword(), user.HashedPassword)
 	if err != nil {
-		return nil, status.Errorf(codes.NotFound, "password does not match")
+		return nil, status.Errorf(codes.NotFound, "incorrect password")
 	}
 
 	duration, _ := time.ParseDuration(server.config.AccessTokenDuration)
@@ -75,8 +76,6 @@ func (server *Server) LoginUser(context context.Context, req *pb.LoginUserReques
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "internal server err!! %s", err)
 	}
-
-	//userRes := pb.CreateUserResponse{User: convertUser(user)}
 
 	rsp := &pb.LoginUserResponse{
 		SessionId:             session.ID.String(),
