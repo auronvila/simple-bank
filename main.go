@@ -3,12 +3,16 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/auronvila/simple-bank/api"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	_ "github.com/auronvila/simple-bank/doc/statik"
 	"github.com/auronvila/simple-bank/gapi"
 	"github.com/auronvila/simple-bank/pb"
 	"github.com/auronvila/simple-bank/util"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
@@ -30,10 +34,26 @@ func main() {
 		log.Fatal("cannot connect to the db", err)
 	}
 
+	// run db migrations
+	runDbMigration(config.MigrationUrl, config.DbSource)
 	store := db.NewStore(conn)
 
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
+}
+
+func runDbMigration(migrationUrl string, dbSource string) {
+	migration, err := migrate.New(migrationUrl, dbSource)
+	if err != nil {
+		log.Fatal("cannot initialize migration!!: ", err)
+	}
+
+	err = migration.Up()
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		log.Fatal("error during migration process!!: ", err)
+	}
+
+	log.Println("db migrated successfully")
 }
 
 func runGrpcServer(config util.Config, store db.Store) {

@@ -12,6 +12,7 @@ type Config struct {
 	DbSource             string        `mapstructure:"db_source"`
 	HttpServerAddress    string        `mapstructure:"http_server_address"`
 	GrpcServerAddress    string        `mapstructure:"grpc_server_address"`
+	MigrationUrl         string        `mapstructure:"migration_url"`
 	TokenSymmetricKey    string        `mapstructure:"token_symmetric_key"`
 	AccessTokenDuration  string        `mapstructure:"access_token_duration"`
 	RefreshTokenDuration time.Duration `mapstructure:"refresh_token_duration"`
@@ -21,28 +22,29 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
 
-	// Optional: read file
-	viper.SetConfigName("app")
+	viper.SetConfigFile("app.env")
 	viper.SetConfigType("env")
 	viper.AddConfigPath(path)
+
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("No config file found, using environment variables only")
 	}
 
-	// Bind explicitly
-	_ = viper.BindEnv("db_driver")
-	_ = viper.BindEnv("db_source")
-	_ = viper.BindEnv("http_server_address")
-	_ = viper.BindEnv("grpc_server_address")
-	_ = viper.BindEnv("token_symmetric_key")
-	_ = viper.BindEnv("access_token_duration")
-	_ = viper.BindEnv("refresh_token_duration")
-
-	err = viper.Unmarshal(&config)
-	if err != nil {
-		fmt.Println("Unmarshal error:", err)
-	} else {
-		fmt.Println("Unmarshal did not have any errors")
+	config = Config{
+		DbDriver:            viper.GetString("db_driver"),
+		DbSource:            viper.GetString("db_source"),
+		HttpServerAddress:   viper.GetString("http_server_address"),
+		GrpcServerAddress:   viper.GetString("grpc_server_address"),
+		MigrationUrl:        viper.GetString("migration_url"),
+		TokenSymmetricKey:   viper.GetString("token_symmetric_key"),
+		AccessTokenDuration: viper.GetString("access_token_duration"),
+		RefreshTokenDuration: func() time.Duration {
+			dur, _ := time.ParseDuration(viper.GetString("refresh_token_duration"))
+			return dur
+		}(),
 	}
+
+	// debug purposes
+	//fmt.Printf("Loaded config: %+v\n", config)
 	return
 }
