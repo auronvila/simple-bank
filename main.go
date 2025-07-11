@@ -71,7 +71,14 @@ func runGatewayServer(config util.Config, store db.Store) {
 		},
 	})
 
-	grpcMux := runtime.NewServeMux(jsonOption)
+	grpcMux := runtime.NewServeMux(jsonOption, runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
+		switch key {
+		case "user-agent", "x-real-ip", "x-forwarded-for":
+			return key, true
+		default:
+			return runtime.DefaultHeaderMatcher(key)
+		}
+	}))
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
