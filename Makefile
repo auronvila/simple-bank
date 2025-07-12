@@ -24,6 +24,10 @@ testApi:
 server:
 	go run main.go
 
+# when using air if the files are updated the server restarts automatically
+devServer:
+	air
+
 createmigrate:
 	migrate create -ext sql -dir db/migration -seq <<MIGRATION NAME>>
 

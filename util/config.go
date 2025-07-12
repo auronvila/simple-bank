@@ -26,20 +26,22 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetConfigType("env")
 	viper.AddConfigPath(path)
 
+	fmt.Println("Trying to load config from path:", path)
+
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("No config file found, using environment variables only")
 	}
 
 	config = Config{
-		DbDriver:            viper.GetString("db_driver"),
-		DbSource:            viper.GetString("db_source"),
-		HttpServerAddress:   viper.GetString("http_server_address"),
-		GrpcServerAddress:   viper.GetString("grpc_server_address"),
-		MigrationUrl:        viper.GetString("migration_url"),
-		TokenSymmetricKey:   viper.GetString("token_symmetric_key"),
-		AccessTokenDuration: viper.GetString("access_token_duration"),
+		DbDriver:            strings.TrimSpace(viper.GetString("db_driver")),
+		DbSource:            strings.TrimSpace(viper.GetString("db_source")),
+		HttpServerAddress:   strings.TrimSpace(viper.GetString("http_server_address")),
+		GrpcServerAddress:   strings.TrimSpace(viper.GetString("grpc_server_address")),
+		MigrationUrl:        strings.TrimSpace(viper.GetString("migration_url")),
+		TokenSymmetricKey:   strings.TrimSpace(viper.GetString("token_symmetric_key")),
+		AccessTokenDuration: strings.TrimSpace(viper.GetString("access_token_duration")),
 		RefreshTokenDuration: func() time.Duration {
-			dur, _ := time.ParseDuration(viper.GetString("refresh_token_duration"))
+			dur, _ := time.ParseDuration(strings.TrimSpace(viper.GetString("refresh_token_duration")))
 			return dur
 		}(),
 	}

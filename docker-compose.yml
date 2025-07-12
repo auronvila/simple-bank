@@ -3,8 +3,8 @@ services:
   postgres:
     image: postgres:12-alpine
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
       - POSTGRES_DB=simple-bank
   api:
     depends_on:
@@ -16,7 +16,7 @@ services:
       - "3002:3002"
     environment:
       - DB_DRIVER=postgres
-      - DB_SOURCE=postgresql://root:secret@postgres:5432/simple-bank?sslmode=disable
+      - DB_SOURCE=postgresql://postgres:1@localhost:5432/simple-bank?sslmode=disable
       - HTTP_SERVER_ADDRESS=0.0.0.0:3002
       - GRPC_SERVER_ADDRESS=0.0.0.0:3003
       - MIGRATION_URL=file://db/migration
