@@ -33,7 +33,6 @@ service SimpleBank {
     };
   }
 
-
   rpc LoginUser (LoginUserRequest) returns (LoginUserResponse){
     option (google.api.http) = {
       post: "/v1/login_user"
