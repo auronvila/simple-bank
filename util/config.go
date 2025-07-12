@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	Environment          string        `mapstructure:"environment"`
 	DbDriver             string        `mapstructure:"db_driver"`
 	DbSource             string        `mapstructure:"db_source"`
 	HttpServerAddress    string        `mapstructure:"http_server_address"`
@@ -33,6 +34,7 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 
 	config = Config{
+		Environment:         strings.TrimSpace(viper.GetString("environment")),
 		DbDriver:            strings.TrimSpace(viper.GetString("db_driver")),
 		DbSource:            strings.TrimSpace(viper.GetString("db_source")),
 		HttpServerAddress:   strings.TrimSpace(viper.GetString("http_server_address")),
