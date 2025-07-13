@@ -28,6 +28,7 @@ type Account struct {
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Currency      string                 `protobuf:"bytes,3,opt,name=currency,proto3" json:"currency,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Balance       int64                  `protobuf:"varint,5,opt,name=balance,proto3" json:"balance,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -90,17 +91,25 @@ func (x *Account) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Account) GetBalance() int64 {
+	if x != nil {
+		return x.Balance
+	}
+	return 0
+}
+
 var File_account_account_proto protoreflect.FileDescriptor
 
 const file_account_account_proto_rawDesc = "" +
 	"\n" +
-	"\x15account/account.proto\x12\x02pb\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8c\x01\n" +
+	"\x15account/account.proto\x12\x02pb\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x01\n" +
 	"\aAccount\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x129\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB-Z+github.com/auronvila/simple-bank/pb/accountb\x06proto3"
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12\x18\n" +
+	"\abalance\x18\x05 \x01(\x03R\abalanceB-Z+github.com/auronvila/simple-bank/pb/accountb\x06proto3"
 
 var (
 	file_account_account_proto_rawDescOnce sync.Once

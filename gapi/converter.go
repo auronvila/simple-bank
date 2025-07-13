@@ -23,7 +23,20 @@ func convertAccount(account db.Account) *acPb.CreateAccountResponse {
 			Id:        account.ID,
 			Username:  account.Owner,
 			Currency:  account.Currency,
+			Balance:   account.Balance,
 			CreatedAt: timestamppb.New(account.CreatedAt),
+		},
+	}
+}
+
+func convertAccountForUpdate(account db.Account) *acPb.UpdateAccountBalanceResponse {
+	return &acPb.UpdateAccountBalanceResponse{
+		Account: &acPb.Account{
+			Id:        account.ID,
+			Username:  account.Owner,
+			Currency:  account.Currency,
+			CreatedAt: timestamppb.New(account.CreatedAt),
+			Balance:   account.Balance,
 		},
 	}
 }

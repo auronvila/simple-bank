@@ -7,7 +7,7 @@ import (
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	pb "github.com/auronvila/simple-bank/pb/user"
 	"github.com/auronvila/simple-bank/util"
-	"github.com/auronvila/simple-bank/val"
+	"github.com/auronvila/simple-bank/validator"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -80,11 +80,11 @@ func (server *Server) LoginUser(context context.Context, req *pb.LoginUserReques
 }
 
 func ValidateLoginUser(req *pb.LoginUserRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateUsername(req.GetUsername()); err != nil {
+	if err := validator.ValidateUsername(req.GetUsername()); err != nil {
 		violations = append(violations, FieldViolation("username", err))
 	}
 
-	if err := val.ValidatePassword(req.GetPassword()); err != nil {
+	if err := validator.ValidatePassword(req.GetPassword()); err != nil {
 		violations = append(violations, FieldViolation("password", err))
 	}
 

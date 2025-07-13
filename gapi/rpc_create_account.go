@@ -4,7 +4,7 @@ import (
 	"context"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	pb "github.com/auronvila/simple-bank/pb/account"
-	"github.com/auronvila/simple-bank/val"
+	"github.com/auronvila/simple-bank/validator"
 	"github.com/lib/pq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
@@ -49,11 +49,11 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 }
 
 func ValidateCreateAccount(req *pb.CreateAccountRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := val.ValidateCurrency(req.GetCurrency()); err != nil {
+	if err := validator.ValidateCurrency(req.GetCurrency()); err != nil {
 		violations = append(violations, FieldViolation("currency", err))
 	}
 
-	if err := val.ValidateUsername(req.GetOwner()); err != nil {
+	if err := validator.ValidateUsername(req.GetOwner()); err != nil {
 		violations = append(violations, FieldViolation("owner", err))
 	}
 
