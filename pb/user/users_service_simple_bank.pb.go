@@ -36,7 +36,7 @@ const file_user_users_service_simple_bank_proto_rawDesc = "" +
 	"UpdateUser\x12\x15.pb.UpdateUserRequest\x1a\x16.pb.UpdateUserResponse\"W\x92A:\x12\vUpdate User\x1a+Used to partially update a user by username\x82\xd3\xe4\x93\x02\x14:\x01*2\x0f/v1/update_userB\x8a\x01\x92A]\x12[\n" +
 	"\x0fSimple Bank API\"C\n" +
 	"\n" +
-	"Auron Vila\x12\x1chttps://github.com/auronvila\x1a\x17auronvila.dev@gmail.com2\x031.2Z(github.com/auronvila/simple-bank/pb/userb\x06proto3"
+	"Auron Vila\x12\x1chttps://github.com/auronvila\x1a\x17auronvila.dev@gmail.com2\x031.3Z(github.com/auronvila/simple-bank/pb/userb\x06proto3"
 
 var file_user_users_service_simple_bank_proto_goTypes = []any{
 	(*CreateUserRequest)(nil),  // 0: pb.CreateUserRequest

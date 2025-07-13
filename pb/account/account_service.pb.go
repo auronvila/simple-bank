@@ -26,19 +26,24 @@ var File_account_account_service_proto protoreflect.FileDescriptor
 
 const file_account_account_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1daccount/account_service.proto\x12\x02pb\x1a account/rpc_create_account.proto\x1a\x15account/account.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xb0\x01\n" +
+	"\x1daccount/account_service.proto\x12\x02pb\x1a account/rpc_create_account.proto\x1a#account/rpc_list_user_account.proto\x1a\x15account/account.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xdc\x02\n" +
 	"\bAccounts\x12\xa3\x01\n" +
-	"\rCreateAccount\x12\x18.pb.CreateAccountRequest\x1a\x19.pb.CreateAccountResponse\"]\x92A=\x12\x12Create new Account\x1a'Used to create a new account for a user\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1/create_accountB-Z+github.com/auronvila/simple-bank/pb/accountb\x06proto3"
+	"\rCreateAccount\x12\x18.pb.CreateAccountRequest\x1a\x19.pb.CreateAccountResponse\"]\x92A=\x12\x12Create new Account\x1a'Used to create a new account for a user\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1/create_account\x12\xa9\x01\n" +
+	"\x10ListUserAccounts\x12\x1b.pb.ListUserAccountsRequest\x1a\x1c.pb.ListUserAccountsResponse\"Z\x92A9\x12\x12List user accounts\x1a#Used to get the account of the user\x82\xd3\xe4\x93\x02\x18\x12\x16/v1/list_user_accountsB-Z+github.com/auronvila/simple-bank/pb/accountb\x06proto3"
 
 var file_account_account_service_proto_goTypes = []any{
-	(*CreateAccountRequest)(nil),  // 0: pb.CreateAccountRequest
-	(*CreateAccountResponse)(nil), // 1: pb.CreateAccountResponse
+	(*CreateAccountRequest)(nil),     // 0: pb.CreateAccountRequest
+	(*ListUserAccountsRequest)(nil),  // 1: pb.ListUserAccountsRequest
+	(*CreateAccountResponse)(nil),    // 2: pb.CreateAccountResponse
+	(*ListUserAccountsResponse)(nil), // 3: pb.ListUserAccountsResponse
 }
 var file_account_account_service_proto_depIdxs = []int32{
 	0, // 0: pb.Accounts.CreateAccount:input_type -> pb.CreateAccountRequest
-	1, // 1: pb.Accounts.CreateAccount:output_type -> pb.CreateAccountResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	1, // 1: pb.Accounts.ListUserAccounts:input_type -> pb.ListUserAccountsRequest
+	2, // 2: pb.Accounts.CreateAccount:output_type -> pb.CreateAccountResponse
+	3, // 3: pb.Accounts.ListUserAccounts:output_type -> pb.ListUserAccountsResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -50,6 +55,7 @@ func file_account_account_service_proto_init() {
 		return
 	}
 	file_account_rpc_create_account_proto_init()
+	file_account_rpc_list_user_account_proto_init()
 	file_account_account_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

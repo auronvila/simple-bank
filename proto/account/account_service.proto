@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package pb;
 import "account/rpc_create_account.proto";
+import "account/rpc_list_user_account.proto";
 import "account/account.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -17,6 +18,16 @@ service Accounts {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Used to create a new account for a user"
       summary: "Create new Account"
+    };
+  }
+  
+  rpc ListUserAccounts(ListUserAccountsRequest) returns (ListUserAccountsResponse) {
+    option (google.api.http) = {
+      get: "/v1/list_user_accounts"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Used to list the accounts of the user"
+      summary: "List user accounts"
     };
   }
 }

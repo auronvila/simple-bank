@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Simple Bank API",
-    "version": "1.2",
+    "version": "1.3",
     "contact": {
       "name": "Auron Vila",
       "url": "https://github.com/auronvila",
@@ -89,6 +89,30 @@
         ],
         "tags": [
           "Users"
+        ]
+      }
+    },
+    "/v1/list_user_accounts": {
+      "get": {
+        "summary": "List user accounts",
+        "description": "Used to get the account of the user",
+        "operationId": "Accounts_ListUserAccounts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListUserAccountsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Accounts"
         ]
       }
     },
@@ -222,6 +246,19 @@
       "properties": {
         "user": {
           "$ref": "#/definitions/pbUser"
+        }
+      }
+    },
+    "pbListUserAccountsResponse": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbAccount"
+          },
+          "title": "repeated means that an array of account type will be returned"
         }
       }
     },
