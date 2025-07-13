@@ -8,7 +8,8 @@ import (
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	_ "github.com/auronvila/simple-bank/doc/statik"
 	"github.com/auronvila/simple-bank/gapi"
-	"github.com/auronvila/simple-bank/pb"
+	accountPb "github.com/auronvila/simple-bank/pb/account"
+	userPb "github.com/auronvila/simple-bank/pb/user"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -32,8 +33,10 @@ func main() {
 		log.Fatal().Msg("cannot load config")
 	}
 	conn, err := sql.Open(config.DbDriver, config.DbSource)
+	prettyOutput := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot connect to the db")
+		prettyOutput.Fatal().Err(err).Msg("cannot connect to the db")
 	}
 
 	if config.Environment == "development" {
@@ -70,7 +73,8 @@ func runGrpcServer(config util.Config, store db.Store) {
 
 	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
 	grpcServer := grpc.NewServer(grpcLogger)
-	pb.RegisterSimpleBankServer(grpcServer, server)
+	userPb.RegisterUsersServer(grpcServer, server)
+	accountPb.RegisterAccountsServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
 	listener, err := net.Listen("tcp", config.GrpcServerAddress)
@@ -110,7 +114,8 @@ func runGatewayServer(config util.Config, store db.Store) {
 	}))
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
+	err = userPb.RegisterUsersHandlerServer(ctx, grpcMux, server)
+	err = accountPb.RegisterAccountsHandlerServer(ctx, grpcMux, server)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot register handler server: ")
@@ -139,6 +144,7 @@ func runGatewayServer(config util.Config, store db.Store) {
 	}
 }
 
+// ? deprecated: used before to spin up a gin server but now grpc gateway is used
 func runGinServer(config util.Config, store db.Store) {
 	server, err := api.NewServer(config, store)
 	if err != nil {

@@ -3,13 +3,15 @@ package gapi
 import (
 	"fmt"
 	db "github.com/auronvila/simple-bank/db/sqlc"
-	"github.com/auronvila/simple-bank/pb"
+	accountPb "github.com/auronvila/simple-bank/pb/account"
+	userPb "github.com/auronvila/simple-bank/pb/user"
 	"github.com/auronvila/simple-bank/token"
 	"github.com/auronvila/simple-bank/util"
 )
 
 type Server struct {
-	pb.UnimplementedSimpleBankServer
+	userPb.UnimplementedUsersServer
+	accountPb.UnimplementedAccountsServer
 	config     util.Config
 	store      db.Store
 	tokenMaker token.Maker

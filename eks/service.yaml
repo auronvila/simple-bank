@@ -14,5 +14,5 @@ spec:
   type: LoadBalancer
   
   
-  # DOC -> run this command to port the traffic to the service deployed in kubernetes.
-  # kubectl port-forward service/simple-bank-api-service 3002:3002
+  # DOC -> run this command to port the traffic to the user deployed in kubernetes.
+  # kubectl port-forward user/simple-bank-api-user 3002:3002

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+
+package pb;
+import "google/protobuf/timestamp.proto";
+
+
+option go_package = "github.com/auronvila/simple-bank/pb/account";
+
+message Account {
+  int64 id = 1;
+  string username = 2;
+  string currency = 3;
+  google.protobuf.Timestamp created_at = 4;
+}

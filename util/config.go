@@ -1,8 +1,10 @@
 package util
 
 import (
-	"fmt"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"os"
 	"strings"
 	"time"
 )
@@ -27,10 +29,12 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetConfigType("env")
 	viper.AddConfigPath(path)
 
-	fmt.Println("Trying to load config from path:", path)
+	// * because the variables are not loaded manually print the logs pretty
+	prettyOutput := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	prettyOutput.Info().Msgf("Trying to load config from path: %s", path)
 
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("No config file found, using environment variables only")
+		prettyOutput.Error().Msg("No config file found, using environment variables only")
 	}
 
 	config = Config{

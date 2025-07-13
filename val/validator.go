@@ -9,6 +9,7 @@ import (
 var (
 	isValidUsername = regexp.MustCompile(`^[a-z0-9_]+$`).MatchString
 	isValidFullName = regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString
+	isValidCurrency = regexp.MustCompile(`^(USD|EUR|CAD)$`).MatchString
 )
 
 func ValidateString(val string, minLength int, maxLength int) error {
@@ -19,6 +20,16 @@ func ValidateString(val string, minLength int, maxLength int) error {
 	return nil
 }
 
+func ValidateCurrency(val string) error {
+	if err := ValidateString(val, 3, 3); err != nil {
+		return err
+	}
+
+	if !isValidCurrency(val) {
+		return fmt.Errorf("currency can only be CAD, EUR, USD")
+	}
+	return nil
+}
 func ValidateUsername(val string) error {
 	if err := ValidateString(val, 3, 100); err != nil {
 		return err

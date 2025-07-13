@@ -3,7 +3,7 @@ package gapi
 import (
 	"context"
 	db "github.com/auronvila/simple-bank/db/sqlc"
-	"github.com/auronvila/simple-bank/pb"
+	pb "github.com/auronvila/simple-bank/pb/user"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/auronvila/simple-bank/val"
 	"github.com/lib/pq"
