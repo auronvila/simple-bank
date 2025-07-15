@@ -5,6 +5,7 @@ import "account/rpc_create_account.proto";
 import "account/rpc_list_user_account.proto";
 import "account/rpc_update_account_balance.proto";
 import "account/rpc_get_account_by_id.proto";
+import "account/rpc_create_transfer.proto";
 import "account/account.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -47,6 +48,17 @@ service Accounts {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Used to get an account by id"
       summary: "Get Account By id"
+    };
+  }
+
+  rpc CreateTransfer(CreateTransferRequest) returns (CreateTransferResponse) {
+    option (google.api.http) = {
+      post: "/v1/create_transfer"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Used to create a transfer between two accounts"
+      summary: "Create transfer between two accounts"
     };
   }
 }

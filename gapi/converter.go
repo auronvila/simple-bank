@@ -50,3 +50,42 @@ func convertAccountForGet(account db.Account) *acPb.GetAccountByIdResponse {
 		Balance:   account.Balance,
 	}}
 }
+
+func convertTransfer(transfer db.Transfer) *acPb.Transfer {
+	return &acPb.Transfer{
+		Id:            transfer.ID,
+		FromAccountId: transfer.FromAccountID,
+		ToAccountId:   transfer.ToAccountID,
+		Amount:        transfer.Amount,
+		CreatedAt:     timestamppb.New(transfer.CreatedAt),
+	}
+}
+
+func convertAccountForTransaction(account db.Account) *acPb.Account {
+	return &acPb.Account{
+		Id:        account.ID,
+		Username:  account.Owner,
+		Balance:   account.Balance,
+		Currency:  account.Currency,
+		CreatedAt: timestamppb.New(account.CreatedAt),
+	}
+}
+
+func convertEntry(entry db.Entry) *acPb.Entry {
+	return &acPb.Entry{
+		Id:        entry.ID,
+		AccountId: entry.AccountID,
+		Amount:    entry.Amount,
+		CreatedAt: timestamppb.New(entry.CreatedAt),
+	}
+}
+
+func convertTransferTxRequest(transferObj db.TransferTxResult) *acPb.CreateTransferResponse {
+	return &acPb.CreateTransferResponse{
+		Transfer:    convertTransfer(transferObj.Transfer),
+		FromAccount: convertAccountForTransaction(transferObj.FromAccount),
+		ToAccount:   convertAccountForTransaction(transferObj.ToAccount),
+		FromEntry:   convertEntry(transferObj.FromEntry),
+		ToEntry:     convertEntry(transferObj.ToEntry),
+	}
+}

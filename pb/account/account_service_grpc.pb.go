@@ -23,6 +23,7 @@ const (
 	Accounts_ListUserAccounts_FullMethodName     = "/pb.Accounts/ListUserAccounts"
 	Accounts_UpdateAccountBalance_FullMethodName = "/pb.Accounts/UpdateAccountBalance"
 	Accounts_GetAccountById_FullMethodName       = "/pb.Accounts/GetAccountById"
+	Accounts_CreateTransfer_FullMethodName       = "/pb.Accounts/CreateTransfer"
 )
 
 // AccountsClient is the client API for Accounts service.
@@ -33,6 +34,7 @@ type AccountsClient interface {
 	ListUserAccounts(ctx context.Context, in *ListUserAccountsRequest, opts ...grpc.CallOption) (*ListUserAccountsResponse, error)
 	UpdateAccountBalance(ctx context.Context, in *UpdateAccountBalanceRequest, opts ...grpc.CallOption) (*UpdateAccountBalanceResponse, error)
 	GetAccountById(ctx context.Context, in *GetAccountByIdRequest, opts ...grpc.CallOption) (*GetAccountByIdResponse, error)
+	CreateTransfer(ctx context.Context, in *CreateTransferRequest, opts ...grpc.CallOption) (*CreateTransferResponse, error)
 }
 
 type accountsClient struct {
@@ -83,6 +85,16 @@ func (c *accountsClient) GetAccountById(ctx context.Context, in *GetAccountByIdR
 	return out, nil
 }
 
+func (c *accountsClient) CreateTransfer(ctx context.Context, in *CreateTransferRequest, opts ...grpc.CallOption) (*CreateTransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTransferResponse)
+	err := c.cc.Invoke(ctx, Accounts_CreateTransfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountsServer is the server API for Accounts service.
 // All implementations must embed UnimplementedAccountsServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type AccountsServer interface {
 	ListUserAccounts(context.Context, *ListUserAccountsRequest) (*ListUserAccountsResponse, error)
 	UpdateAccountBalance(context.Context, *UpdateAccountBalanceRequest) (*UpdateAccountBalanceResponse, error)
 	GetAccountById(context.Context, *GetAccountByIdRequest) (*GetAccountByIdResponse, error)
+	CreateTransfer(context.Context, *CreateTransferRequest) (*CreateTransferResponse, error)
 	mustEmbedUnimplementedAccountsServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedAccountsServer) UpdateAccountBalance(context.Context, *Update
 }
 func (UnimplementedAccountsServer) GetAccountById(context.Context, *GetAccountByIdRequest) (*GetAccountByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccountById not implemented")
+}
+func (UnimplementedAccountsServer) CreateTransfer(context.Context, *CreateTransferRequest) (*CreateTransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTransfer not implemented")
 }
 func (UnimplementedAccountsServer) mustEmbedUnimplementedAccountsServer() {}
 func (UnimplementedAccountsServer) testEmbeddedByValue()                  {}
@@ -206,6 +222,24 @@ func _Accounts_GetAccountById_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Accounts_CreateTransfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTransferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountsServer).CreateTransfer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Accounts_CreateTransfer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountsServer).CreateTransfer(ctx, req.(*CreateTransferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Accounts_ServiceDesc is the grpc.ServiceDesc for Accounts service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var Accounts_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAccountById",
 			Handler:    _Accounts_GetAccountById_Handler,
+		},
+		{
+			MethodName: "CreateTransfer",
+			Handler:    _Accounts_CreateTransfer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
