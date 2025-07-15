@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "account/account.proto";
+
+option go_package = "github.com/auronvila/simple-bank/pb/account";
+
+message UpdateAccountBalanceRequest {
+  int64 balance = 1;
+  string currency = 2;
+}
+
+message UpdateAccountBalanceResponse {
+  Account account = 1;
+}

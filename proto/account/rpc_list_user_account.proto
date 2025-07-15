@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+import "account/account.proto";
+
+option go_package = "github.com/auronvila/simple-bank/pb/account";
+
+message ListUserAccountsRequest {}
+
+message ListUserAccountsResponse {
+  // repeated means that an array of account type will be returned
+  repeated Account accounts = 1;
+}
