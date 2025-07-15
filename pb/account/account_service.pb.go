@@ -26,29 +26,34 @@ var File_account_account_service_proto protoreflect.FileDescriptor
 
 const file_account_account_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1daccount/account_service.proto\x12\x02pb\x1a account/rpc_create_account.proto\x1a#account/rpc_list_user_account.proto\x1a(account/rpc_update_account_balance.proto\x1a\x15account/account.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xe1\x03\n" +
+	"\x1daccount/account_service.proto\x12\x02pb\x1a account/rpc_create_account.proto\x1a#account/rpc_list_user_account.proto\x1a(account/rpc_update_account_balance.proto\x1a#account/rpc_get_account_by_id.proto\x1a\x15account/account.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\x83\x05\n" +
 	"\bAccounts\x12\xa3\x01\n" +
 	"\rCreateAccount\x12\x18.pb.CreateAccountRequest\x1a\x19.pb.CreateAccountResponse\"]\x92A=\x12\x12Create new Account\x1a'Used to create a new account for a user\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1/create_account\x12\xab\x01\n" +
 	"\x10ListUserAccounts\x12\x1b.pb.ListUserAccountsRequest\x1a\x1c.pb.ListUserAccountsResponse\"\\\x92A;\x12\x12List user accounts\x1a%Used to list the accounts of the user\x82\xd3\xe4\x93\x02\x18\x12\x16/v1/list_user_accounts\x12\x80\x01\n" +
-	"\x14UpdateAccountBalance\x12\x1f.pb.UpdateAccountBalanceRequest\x1a .pb.UpdateAccountBalanceResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\x1a\x1a/v1/update_account_balanceB-Z+github.com/auronvila/simple-bank/pb/accountb\x06proto3"
+	"\x14UpdateAccountBalance\x12\x1f.pb.UpdateAccountBalanceRequest\x1a .pb.UpdateAccountBalanceResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\x1a\x1a/v1/update_account_balance\x12\x9f\x01\n" +
+	"\x0eGetAccountById\x12\x19.pb.GetAccountByIdRequest\x1a\x1a.pb.GetAccountByIdResponse\"V\x92A1\x12\x11Get Account By id\x1a\x1cUsed to get an account by id\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/get_account_by_id/{id}B-Z+github.com/auronvila/simple-bank/pb/accountb\x06proto3"
 
 var file_account_account_service_proto_goTypes = []any{
 	(*CreateAccountRequest)(nil),         // 0: pb.CreateAccountRequest
 	(*ListUserAccountsRequest)(nil),      // 1: pb.ListUserAccountsRequest
 	(*UpdateAccountBalanceRequest)(nil),  // 2: pb.UpdateAccountBalanceRequest
-	(*CreateAccountResponse)(nil),        // 3: pb.CreateAccountResponse
-	(*ListUserAccountsResponse)(nil),     // 4: pb.ListUserAccountsResponse
-	(*UpdateAccountBalanceResponse)(nil), // 5: pb.UpdateAccountBalanceResponse
+	(*GetAccountByIdRequest)(nil),        // 3: pb.GetAccountByIdRequest
+	(*CreateAccountResponse)(nil),        // 4: pb.CreateAccountResponse
+	(*ListUserAccountsResponse)(nil),     // 5: pb.ListUserAccountsResponse
+	(*UpdateAccountBalanceResponse)(nil), // 6: pb.UpdateAccountBalanceResponse
+	(*GetAccountByIdResponse)(nil),       // 7: pb.GetAccountByIdResponse
 }
 var file_account_account_service_proto_depIdxs = []int32{
 	0, // 0: pb.Accounts.CreateAccount:input_type -> pb.CreateAccountRequest
 	1, // 1: pb.Accounts.ListUserAccounts:input_type -> pb.ListUserAccountsRequest
 	2, // 2: pb.Accounts.UpdateAccountBalance:input_type -> pb.UpdateAccountBalanceRequest
-	3, // 3: pb.Accounts.CreateAccount:output_type -> pb.CreateAccountResponse
-	4, // 4: pb.Accounts.ListUserAccounts:output_type -> pb.ListUserAccountsResponse
-	5, // 5: pb.Accounts.UpdateAccountBalance:output_type -> pb.UpdateAccountBalanceResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	3, // 3: pb.Accounts.GetAccountById:input_type -> pb.GetAccountByIdRequest
+	4, // 4: pb.Accounts.CreateAccount:output_type -> pb.CreateAccountResponse
+	5, // 5: pb.Accounts.ListUserAccounts:output_type -> pb.ListUserAccountsResponse
+	6, // 6: pb.Accounts.UpdateAccountBalance:output_type -> pb.UpdateAccountBalanceResponse
+	7, // 7: pb.Accounts.GetAccountById:output_type -> pb.GetAccountByIdResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -62,6 +67,7 @@ func file_account_account_service_proto_init() {
 	file_account_rpc_create_account_proto_init()
 	file_account_rpc_list_user_account_proto_init()
 	file_account_rpc_update_account_balance_proto_init()
+	file_account_rpc_get_account_by_id_proto_init()
 	file_account_account_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

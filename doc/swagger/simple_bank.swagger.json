@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Simple Bank API",
-    "version": "1.3",
+    "version": "1.4",
     "contact": {
       "name": "Auron Vila",
       "url": "https://github.com/auronvila",
@@ -89,6 +89,39 @@
         ],
         "tags": [
           "Users"
+        ]
+      }
+    },
+    "/v1/get_account_by_id/{id}": {
+      "get": {
+        "summary": "Get Account By id",
+        "description": "Used to get an account by id",
+        "operationId": "Accounts_GetAccountById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetAccountByIdResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Accounts"
         ]
       }
     },
@@ -282,6 +315,14 @@
       "properties": {
         "user": {
           "$ref": "#/definitions/pbUser"
+        }
+      }
+    },
+    "pbGetAccountByIdResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/pbAccount"
         }
       }
     },

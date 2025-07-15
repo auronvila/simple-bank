@@ -4,6 +4,7 @@ package pb;
 import "account/rpc_create_account.proto";
 import "account/rpc_list_user_account.proto";
 import "account/rpc_update_account_balance.proto";
+import "account/rpc_get_account_by_id.proto";
 import "account/account.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -36,6 +37,16 @@ service Accounts {
     option (google.api.http) = {
       put: "/v1/update_account_balance"
       body: "*"
+    };
+  }
+
+  rpc GetAccountById(GetAccountByIdRequest) returns (GetAccountByIdResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_account_by_id/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Used to get an account by id"
+      summary: "Get Account By id"
     };
   }
 }

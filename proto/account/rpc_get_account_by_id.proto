@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+import "account/account.proto";
+
+option go_package = "github.com/auronvila/simple-bank/pb/account";
+
+message GetAccountByIdRequest {
+  int64 id = 1;
+}
+
+message GetAccountByIdResponse {
+  Account account = 1;
+}

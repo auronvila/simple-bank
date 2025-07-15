@@ -40,3 +40,13 @@ func convertAccountForUpdate(account db.Account) *acPb.UpdateAccountBalanceRespo
 		},
 	}
 }
+
+func convertAccountForGet(account db.Account) *acPb.GetAccountByIdResponse {
+	return &acPb.GetAccountByIdResponse{Account: &acPb.Account{
+		Id:        account.ID,
+		Username:  account.Owner,
+		Currency:  account.Currency,
+		CreatedAt: timestamppb.New(account.CreatedAt),
+		Balance:   account.Balance,
+	}}
+}

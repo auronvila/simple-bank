@@ -22,6 +22,7 @@ const (
 	Accounts_CreateAccount_FullMethodName        = "/pb.Accounts/CreateAccount"
 	Accounts_ListUserAccounts_FullMethodName     = "/pb.Accounts/ListUserAccounts"
 	Accounts_UpdateAccountBalance_FullMethodName = "/pb.Accounts/UpdateAccountBalance"
+	Accounts_GetAccountById_FullMethodName       = "/pb.Accounts/GetAccountById"
 )
 
 // AccountsClient is the client API for Accounts service.
@@ -31,6 +32,7 @@ type AccountsClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	ListUserAccounts(ctx context.Context, in *ListUserAccountsRequest, opts ...grpc.CallOption) (*ListUserAccountsResponse, error)
 	UpdateAccountBalance(ctx context.Context, in *UpdateAccountBalanceRequest, opts ...grpc.CallOption) (*UpdateAccountBalanceResponse, error)
+	GetAccountById(ctx context.Context, in *GetAccountByIdRequest, opts ...grpc.CallOption) (*GetAccountByIdResponse, error)
 }
 
 type accountsClient struct {
@@ -71,6 +73,16 @@ func (c *accountsClient) UpdateAccountBalance(ctx context.Context, in *UpdateAcc
 	return out, nil
 }
 
+func (c *accountsClient) GetAccountById(ctx context.Context, in *GetAccountByIdRequest, opts ...grpc.CallOption) (*GetAccountByIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAccountByIdResponse)
+	err := c.cc.Invoke(ctx, Accounts_GetAccountById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountsServer is the server API for Accounts service.
 // All implementations must embed UnimplementedAccountsServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type AccountsServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	ListUserAccounts(context.Context, *ListUserAccountsRequest) (*ListUserAccountsResponse, error)
 	UpdateAccountBalance(context.Context, *UpdateAccountBalanceRequest) (*UpdateAccountBalanceResponse, error)
+	GetAccountById(context.Context, *GetAccountByIdRequest) (*GetAccountByIdResponse, error)
 	mustEmbedUnimplementedAccountsServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedAccountsServer) ListUserAccounts(context.Context, *ListUserAc
 }
 func (UnimplementedAccountsServer) UpdateAccountBalance(context.Context, *UpdateAccountBalanceRequest) (*UpdateAccountBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAccountBalance not implemented")
+}
+func (UnimplementedAccountsServer) GetAccountById(context.Context, *GetAccountByIdRequest) (*GetAccountByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccountById not implemented")
 }
 func (UnimplementedAccountsServer) mustEmbedUnimplementedAccountsServer() {}
 func (UnimplementedAccountsServer) testEmbeddedByValue()                  {}
@@ -172,6 +188,24 @@ func _Accounts_UpdateAccountBalance_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Accounts_GetAccountById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccountByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountsServer).GetAccountById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Accounts_GetAccountById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountsServer).GetAccountById(ctx, req.(*GetAccountByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Accounts_ServiceDesc is the grpc.ServiceDesc for Accounts service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var Accounts_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAccountBalance",
 			Handler:    _Accounts_UpdateAccountBalance_Handler,
+		},
+		{
+			MethodName: "GetAccountById",
+			Handler:    _Accounts_GetAccountById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
