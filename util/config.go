@@ -18,6 +18,7 @@ type Config struct {
 	MigrationUrl         string        `mapstructure:"migration_url"`
 	TokenSymmetricKey    string        `mapstructure:"token_symmetric_key"`
 	AccessTokenDuration  string        `mapstructure:"access_token_duration"`
+	RedisAddress         string        `mapstructure:"redis_address"`
 	RefreshTokenDuration time.Duration `mapstructure:"refresh_token_duration"`
 }
 
@@ -46,6 +47,7 @@ func LoadConfig(path string) (config Config, err error) {
 		MigrationUrl:        strings.TrimSpace(viper.GetString("migration_url")),
 		TokenSymmetricKey:   strings.TrimSpace(viper.GetString("token_symmetric_key")),
 		AccessTokenDuration: strings.TrimSpace(viper.GetString("access_token_duration")),
+		RedisAddress:        strings.TrimSpace(viper.GetString("redis_address")),
 		RefreshTokenDuration: func() time.Duration {
 			dur, _ := time.ParseDuration(strings.TrimSpace(viper.GetString("refresh_token_duration")))
 			return dur

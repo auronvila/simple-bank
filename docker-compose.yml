@@ -24,5 +24,6 @@ services:
       - TOKEN_SYMMETRIC_KEY=12334565434567898765432345675432
       - ACCESS_TOKEN_DURATION=15m
       - REFRESH_TOKEN_DURATION=24h
+      - REDIS_ADDRESS=0.0.0.0:6379
     entrypoint: [ "/app/wait-for.sh","postgres:5432", "--", "/app/start.sh" ]
     command: [ "/app/main" ]
