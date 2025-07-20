@@ -19,6 +19,9 @@ type Config struct {
 	TokenSymmetricKey    string        `mapstructure:"token_symmetric_key"`
 	AccessTokenDuration  string        `mapstructure:"access_token_duration"`
 	RedisAddress         string        `mapstructure:"redis_address"`
+	SmtpSenderName       string        `mapstructure:"smtp_sender_name"`
+	SmtpUsername         string        `mapstructure:"smtp_username"`
+	SmtpPass             string        `mapstructure:"smtp_pass"`
 	RefreshTokenDuration time.Duration `mapstructure:"refresh_token_duration"`
 }
 
@@ -48,6 +51,9 @@ func LoadConfig(path string) (config Config, err error) {
 		TokenSymmetricKey:   strings.TrimSpace(viper.GetString("token_symmetric_key")),
 		AccessTokenDuration: strings.TrimSpace(viper.GetString("access_token_duration")),
 		RedisAddress:        strings.TrimSpace(viper.GetString("redis_address")),
+		SmtpSenderName:      strings.TrimSpace(viper.GetString("smtp_sender_name")),
+		SmtpUsername:        strings.TrimSpace(viper.GetString("smtp_username")),
+		SmtpPass:            strings.TrimSpace(viper.GetString("smtp_pass")),
 		RefreshTokenDuration: func() time.Duration {
 			dur, _ := time.ParseDuration(strings.TrimSpace(viper.GetString("refresh_token_duration")))
 			return dur

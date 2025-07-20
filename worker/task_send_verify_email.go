@@ -2,9 +2,7 @@ package worker
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
@@ -42,13 +40,14 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 
 	user, err := processor.store.GetUser(ctx, payload.Username)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return fmt.Errorf("user does not exist: %w", asynq.SkipRetry)
-		}
-		return fmt.Errorf("failed to get the user: %w", asynq.SkipRetry)
+		//if errors.Is(err, sql.ErrNoRows) {
+		//	return fmt.Errorf("user does not exist: %w", asynq.SkipRetry)
+		//}
+		return fmt.Errorf("failed to get the user: %w", err)
 	}
 
 	// todo send email to user
+
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("email", user.Email).Msg("processed task")
 
 	return nil
