@@ -28,11 +28,14 @@ server:
 devServer:
 	air
 
-createmigrate:
-	migrate create -ext sql -dir db/migration -seq <<MIGRATION NAME>>
+createmigration:
+	migrate create -ext sql -dir db/migration -seq $(name)
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/auronvila/simple-bank/db/sqlc Store
+
+db_schema:
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
 
 proto:
 	rm -f pb/*.go

@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Users_CreateUser_FullMethodName = "/pb.Users/CreateUser"
-	Users_LoginUser_FullMethodName  = "/pb.Users/LoginUser"
-	Users_UpdateUser_FullMethodName = "/pb.Users/UpdateUser"
+	Users_CreateUser_FullMethodName  = "/pb.Users/CreateUser"
+	Users_LoginUser_FullMethodName   = "/pb.Users/LoginUser"
+	Users_UpdateUser_FullMethodName  = "/pb.Users/UpdateUser"
+	Users_VerifyEmail_FullMethodName = "/pb.Users/VerifyEmail"
 )
 
 // UsersClient is the client API for Users service.
@@ -31,6 +32,7 @@ type UsersClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 }
 
 type usersClient struct {
@@ -71,6 +73,16 @@ func (c *usersClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opt
 	return out, nil
 }
 
+func (c *usersClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyEmailResponse)
+	err := c.cc.Invoke(ctx, Users_VerifyEmail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServer is the server API for Users service.
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type UsersServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedUsersServer) LoginUser(context.Context, *LoginUserRequest) (*
 }
 func (UnimplementedUsersServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedUsersServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 func (UnimplementedUsersServer) testEmbeddedByValue()               {}
@@ -172,6 +188,24 @@ func _Users_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).VerifyEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Users_VerifyEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).VerifyEmail(ctx, req.(*VerifyEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Users_ServiceDesc is the grpc.ServiceDesc for Users service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUser",
 			Handler:    _Users_UpdateUser_Handler,
+		},
+		{
+			MethodName: "VerifyEmail",
+			Handler:    _Users_VerifyEmail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
