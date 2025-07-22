@@ -2,7 +2,6 @@ package gapi
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/pb/account"
@@ -24,7 +23,7 @@ func (server *Server) ListUserAccounts(ctx context.Context, _ *account.ListUserA
 
 	accounts, err := server.store.ListAccounts(ctx, accountsParams)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "the user has no associated accounts")
 		}
 		return nil, status.Errorf(codes.Canceled, "error in listing user accounts")

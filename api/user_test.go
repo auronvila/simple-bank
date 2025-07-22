@@ -9,7 +9,6 @@ import (
 	simplebank "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/gin-gonic/gin"
-	"github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 	"net/http"

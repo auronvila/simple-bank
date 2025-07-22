@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"github.com/auronvila/simple-bank/api"
 	db "github.com/auronvila/simple-bank/db/sqlc"
@@ -18,7 +17,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/hibiken/asynq"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rakyll/statik/fs"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -35,7 +35,7 @@ func main() {
 	if err != nil {
 		log.Fatal().Msg("cannot load config")
 	}
-	conn, err := sql.Open(config.DbDriver, config.DbSource)
+	connPool, err := pgxpool.New(context.Background(), config.DbSource)
 	prettyOutput := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	if err != nil {
@@ -48,7 +48,7 @@ func main() {
 
 	// run db migrations
 	runDbMigration(config.MigrationUrl, config.DbSource)
-	store := db.NewStore(conn)
+	store := db.NewStore(connPool)
 
 	redisOpt := asynq.RedisClientOpt{Addr: config.RedisAddress}
 

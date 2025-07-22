@@ -2,10 +2,11 @@ package gapi
 
 import (
 	"context"
+	"errors"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	pb "github.com/auronvila/simple-bank/pb/account"
 	"github.com/auronvila/simple-bank/validator"
-	"github.com/lib/pq"
+	"github.com/jackc/pgx/v5/pgconn"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -33,8 +34,9 @@ func (server *Server) CreateAccount(ctx context.Context, req *pb.CreateAccountRe
 
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
+		var pqErr *pgconn.PgError
+		if errors.As(err, &pqErr) {
+			switch pqErr.Code {
 			case "foreign_key_violation", "unique_violation":
 				return nil, status.Error(codes.AlreadyExists, "user already has an account of this type ")
 			}

@@ -1,13 +1,12 @@
 package api
 
 import (
-	"database/sql"
 	"errors"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/lib/pq"
+	"github.com/jackc/pgx/v5/pgconn"
 	"net/http"
 	"time"
 )
@@ -48,8 +47,9 @@ func (server *Server) CreateUser(ctx *gin.Context) {
 
 	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
+		var pqErr *pgconn.PgError
+		if errors.As(err, &pqErr) {
+			switch pqErr.Code {
 			case "unique_violation":
 				ctx.JSON(http.StatusBadRequest, errorResponse(err))
 				return
@@ -84,7 +84,7 @@ func (server Server) GetUserByUsername(ctx *gin.Context) {
 
 	user, err := server.store.GetUser(ctx, getUserReq.Username)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
@@ -124,7 +124,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 
 	user, err := server.store.GetUser(ctx, req.Username)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}

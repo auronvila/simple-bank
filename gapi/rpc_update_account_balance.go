@@ -2,7 +2,6 @@ package gapi
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	"github.com/auronvila/simple-bank/pb/account"
@@ -31,7 +30,7 @@ func (server *Server) UpdateAccountBalance(ctx context.Context, req *account.Upd
 
 	foundedAccount, err := server.store.UpdateAccountBasedOnUsername(ctx, params)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "no accounts were found")
 		}
 

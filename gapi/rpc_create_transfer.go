@@ -2,7 +2,6 @@ package gapi
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	db "github.com/auronvila/simple-bank/db/sqlc"
@@ -58,7 +57,7 @@ func (server *Server) CreateTransfer(ctx context.Context, req *account.CreateTra
 func (server *Server) validAccount(ctx context.Context, accountId int64, currency string) (*db.Account, error) {
 	account, err := server.store.GetAccount(ctx, accountId)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "account with ID %d not found", accountId)
 		}
 		return nil, status.Errorf(codes.Internal, "failed to get account: %v", err)

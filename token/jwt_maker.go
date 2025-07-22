@@ -11,17 +11,18 @@ const minSecretKeySize = 32
 
 type JWTMaker struct {
 	secretKey string
+	role      string
 }
 
-func NewJwtMaker(secret string) (Maker, error) {
+func NewJwtMaker(secret string, role string) (Maker, error) {
 	if len(secret) < minSecretKeySize {
 		return nil, fmt.Errorf("invalid key size, must be at least %v characters", minSecretKeySize)
 	}
-	return &JWTMaker{secretKey: secret}, nil
+	return &JWTMaker{secretKey: secret, role: role}, nil
 }
 
-func (maker *JWTMaker) GenerateToken(username string, duration time.Duration) (string, *Payload, error) {
-	payload, err := NewPayload(username, duration)
+func (maker *JWTMaker) GenerateToken(username string, role string, duration time.Duration) (string, *Payload, error) {
+	payload, err := NewPayload(username, role, duration)
 	if err != nil {
 		return "", payload, err
 	}

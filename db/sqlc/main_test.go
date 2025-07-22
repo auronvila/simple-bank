@@ -7,7 +7,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
 	"log"
 	"testing"
 )
@@ -30,10 +29,10 @@ func TestMain(m *testing.M) {
 
 	testDb, err = sql.Open(config.DbDriver, config.DbSource)
 	if err != nil {
-		log.Fatal("cannot connect to the db", err)
+		log.Fatal("cannot connect to the connPool", err)
 	}
 
-	testQueries = New(testDb)
+	//testQueries = New(testDb)
 
 	m.Run()
 }

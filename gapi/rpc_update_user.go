@@ -8,6 +8,7 @@ import (
 	pb "github.com/auronvila/simple-bank/pb/user"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/auronvila/simple-bank/validator"
+	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,12 +16,12 @@ import (
 )
 
 func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	authPayload, err := server.authorizeUser(ctx)
+	authPayload, err := server.authorizeUser(ctx, []string{util.BankerRole, util.DepositorRole})
 	if err != nil {
 		return nil, unauthenticatedError(err)
 	}
 
-	if authPayload.Username != req.GetUsername() {
+	if authPayload.Role != util.BankerRole && authPayload.Username != req.GetUsername() {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update the data of another user")
 	}
 
@@ -31,14 +32,14 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 
 	arg := db.UpdateUserParams{
 		Username: req.GetUsername(),
-		Email: sql.NullString{
+		Email: pgtype.Text(sql.NullString{
 			String: req.GetEmail(),
 			Valid:  req.Email != nil,
-		},
-		FullName: sql.NullString{
+		}),
+		FullName: pgtype.Text(sql.NullString{
 			String: req.GetFullName(),
 			Valid:  req.FullName != nil,
-		},
+		}),
 	}
 
 	if req.Password != nil {
@@ -47,12 +48,12 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 			return nil, status.Errorf(codes.Internal, "password could not be hashed!! %s", err)
 		}
 
-		arg.HashedPassword = sql.NullString{
+		arg.HashedPassword = pgtype.Text(sql.NullString{
 			String: hashedPassword,
 			Valid:  req.Password != nil,
-		}
+		})
 
-		arg.PasswordChangedAt = sql.NullTime{
+		arg.PasswordChangedAt = pgtype.Timestamptz{
 			Time:  time.Now(),
 			Valid: true,
 		}
@@ -60,7 +61,7 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 
 	user, err := server.store.UpdateUser(ctx, arg)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "user not found")
 		}
 		return nil, status.Errorf(codes.Internal, "failed to update the user!! %s", err)

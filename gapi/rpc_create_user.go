@@ -2,13 +2,14 @@ package gapi
 
 import (
 	"context"
+	"errors"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	pb "github.com/auronvila/simple-bank/pb/user"
 	"github.com/auronvila/simple-bank/util"
 	"github.com/auronvila/simple-bank/validator"
 	"github.com/auronvila/simple-bank/worker"
 	"github.com/hibiken/asynq"
-	"github.com/lib/pq"
+	"github.com/jackc/pgx/v5/pgconn"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -46,8 +47,9 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 	txResult, err := server.store.CreateUserTx(ctx, arg)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
+		var pqErr *pgconn.PgError
+		if errors.As(err, &pqErr) {
+			switch pqErr.Code {
 			case "unique_violation":
 				return nil, status.Errorf(codes.AlreadyExists, "user with these credentials already exist %s", err)
 			}

@@ -2,7 +2,6 @@ package gapi
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	db "github.com/auronvila/simple-bank/db/sqlc"
 	pb "github.com/auronvila/simple-bank/pb/user"
@@ -22,7 +21,7 @@ func (server *Server) LoginUser(context context.Context, req *pb.LoginUserReques
 	}
 	user, err := server.store.GetUser(context, req.GetUsername())
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "user could not be found")
 		}
 		return nil, status.Errorf(codes.Internal, "internal server err!!")
@@ -34,12 +33,12 @@ func (server *Server) LoginUser(context context.Context, req *pb.LoginUserReques
 	}
 
 	duration, _ := time.ParseDuration(server.config.AccessTokenDuration)
-	accessToken, accessTokenPayload, err := server.tokenMaker.GenerateToken(user.Username, duration)
+	accessToken, accessTokenPayload, err := server.tokenMaker.GenerateToken(user.Username, user.Role, duration)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "internal server err!! %s", err)
 	}
 
-	refreshToken, refreshTokenPayload, err := server.tokenMaker.GenerateToken(user.Username, server.config.RefreshTokenDuration)
+	refreshToken, refreshTokenPayload, err := server.tokenMaker.GenerateToken(user.Username, user.Role, server.config.RefreshTokenDuration)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "internal server err!! %s", err)
 	}
